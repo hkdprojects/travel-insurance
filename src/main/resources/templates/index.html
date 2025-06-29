@@ -15,9 +15,10 @@
             <a th:href="@{/login}" class="btn btn-primary">Login</a> or <a th:href="@{/register}">Register</a> to get
             started.
         </div>
-        <div sec:authorize="isAuthenticated()">
-            <p>Welcome back, <span sec:authentication="name">User</span>!</p>
-            <a th:href="@{/quote/new}" class="btn btn-success">Get a New Quote</a>
+        <div sec:authorize="isAuthenticated()" >
+            <p>Welcome back, <span sec:authentication="principal.fullName">User</span>!</p>
+            <a sec:authorize="hasRole('USER')" th:href="@{/quote/new}" class="btn btn-success">Get a New Quote</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/coverages}" class="btn btn-success">Manage Coverages</a>
         </div>
     </div>
 </body>

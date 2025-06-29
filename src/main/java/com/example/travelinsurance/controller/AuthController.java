@@ -18,11 +18,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
-
     @GetMapping("/login")
     public String login() {
         return "auth/login";
@@ -36,11 +31,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto registrationDto) {
+        System.out.println("DTO received with name: " + registrationDto.getName());
         User existing = userService.findUserByEmail(registrationDto.getEmail());
         if (existing != null) {
             return "redirect:/register?error";
         }
         userService.save(registrationDto);
-        return "redirect:/register?success";
+        return "redirect:/auth/login";
     }
 }

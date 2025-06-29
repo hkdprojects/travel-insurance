@@ -11,11 +11,11 @@ import com.example.travelinsurance.repository.RoleRepository;
 import com.example.travelinsurance.repository.UserRepository;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService {
 
-    // These fields remain private, which is correct!
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -24,6 +24,8 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User save(UserRegistrationDto registrationDto) {
+
+        System.out.println("Registering user with name: " + registrationDto.getName());
         User user = new User();
         user.setName(registrationDto.getName());
         user.setEmail(registrationDto.getEmail());
@@ -38,10 +40,34 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    // ==========================================================
-    // ADD THIS NEW PUBLIC METHOD
-    // ==========================================================
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public User updateUserDetails(String currentEmail, UserUpdateDto userUpdateDto) {
+        User user = userRepository.findByEmail(currentEmail);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        user.setName(userUpdateDto.getName());
+        user.setEmail(userUpdateDto.getEmail());
+        return userRepository.save(user);
+    }
+
+    public boolean updatePassword(String email, PasswordUpdateDto passwordUpdateDto) {
+        User user = userRepository.findByEmail(email);
+        
+        // Check if the old password matches
+        if (!passwordEncoder.matches(passwordUpdateDto.getOldPassword(), user.getPassword())) {
+            return false; // Old password does not match
+        }
+
+        user.setPassword(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }

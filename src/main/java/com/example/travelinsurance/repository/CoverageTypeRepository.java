@@ -1,6 +1,18 @@
 package com.example.travelinsurance.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface CoverageTypeRepository extends JpaRepository<com.example.travelinsurance.model.CoverageType, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.example.travelinsurance.model.CoverageType;
+
+@org.springframework.stereotype.Repository
+public interface CoverageTypeRepository extends JpaRepository<CoverageType, Long> {
+
+    @Query("select c from CoverageType c")
+    List<CoverageType> findAllForAdmin();
+
+    @Query("select c from CoverageType c where c.id = :id")
+    CoverageType findByIdForAdmin(Long id);
 }

@@ -10,4 +10,6 @@ class TravelinsuranceApplicationTests {
 	void contextLoads() {
 	}
 
+	
+
 }

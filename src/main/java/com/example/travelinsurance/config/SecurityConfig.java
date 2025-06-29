@@ -21,10 +21,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register**", "/css/**", "/js/**", "/").permitAll()
-                .requestMatchers("/h2-console/**").permitAll() // Allow H2 console
+                .requestMatchers("/", "/about", "/register**", "/css/**", "/js/**").permitAll() // <-- MODIFIED
+                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/quote/**").hasRole("USER")
+                .requestMatchers("/quote/**", "/profile/**").hasRole("USER") // <-- MODIFIED
                 .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
