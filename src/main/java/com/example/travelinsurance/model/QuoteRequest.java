@@ -17,11 +17,13 @@ public class QuoteRequest {
 
     private String destinationCountry;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+
     private LocalDate startDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+
     private LocalDate endDate;
     private int travelerAge;
-    private String tripType; // SINGLE, MULTI
+    private String tripType;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -30,10 +32,17 @@ public class QuoteRequest {
         inverseJoinColumns = @JoinColumn(name = "coverage_id")
     )
     private Set<CoverageType> selectedCoverages;
+    
+    @Transient 
+    private String userName;
+    
+    @Transient
+    private String userEmail;
 
     private BigDecimal totalPremium;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
 }

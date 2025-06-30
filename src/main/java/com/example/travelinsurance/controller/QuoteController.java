@@ -38,7 +38,13 @@ public class QuoteController {
     }
 
     @PostMapping("/summary")
-    public String getQuoteSummary(@ModelAttribute QuoteRequest quoteRequest, Model model) {
+    public String getQuoteSummary(@ModelAttribute QuoteRequest quoteRequest, Model model, Authentication authentication) {
+
+        User currentUser = userRepository.findByEmail(authentication.getName());
+        
+        quoteRequest.setUserEmail(currentUser.getEmail());
+        quoteRequest.setUserName(currentUser.getName());
+        
         BigDecimal premium = quoteService.calculatePremium(quoteRequest);
         quoteRequest.setTotalPremium(premium);
         

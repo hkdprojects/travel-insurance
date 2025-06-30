@@ -2,6 +2,7 @@ package com.example.travelinsurance.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class UserService {
     public User save(UserRegistrationDto registrationDto) {
 
         System.out.println("Registering user with name: " + registrationDto.getName());
+
         User user = new User();
         user.setName(registrationDto.getName());
         user.setEmail(registrationDto.getEmail());
@@ -49,8 +51,15 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-        user.setName(userUpdateDto.getName());
-        user.setEmail(userUpdateDto.getEmail());
+        if(userUpdateDto.getName() != null && !userUpdateDto.getName().isEmpty()){
+            user.setName(userUpdateDto.getName());
+
+        }else if (userUpdateDto.getEmail() != null && !userUpdateDto.getEmail().isEmpty()) {
+            user.setEmail(userUpdateDto.getEmail());
+        }else{
+            throw new UsernameNotFoundException("No username or email found to update");
+        }
+        
         return userRepository.save(user);
     }
 
